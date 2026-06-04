@@ -61,18 +61,22 @@ docker compose down
 
 ## 📁 Estrutura do Projeto
 
-```text
-cardapio-digital/
-├── backend/
+```plaintext
+cardapio-digital
+│
+├── backend
 │   ├── app.py
 │   ├── requirements.txt
 │   └── Dockerfile
-├── frontend/
+│
+├── frontend
 │   ├── index.html
 │   └── Dockerfile
-├── .github/
-│   └── workflows/
+│
+├── .github
+│   └── workflows
 │       └── docker-build.yml
+│
 ├── .gitignore
 ├── .env.example
 ├── docker-compose.yml
