@@ -1,0 +1,41 @@
+# Nome do workflow (aparece na aba "Actions" do GitHub)
+name: Build Docker Images
+
+# GATILHO: quando este workflow vai executar?
+on:
+  push:
+    branches:
+      - main        # Executa quando alguém faz push na branch main
+  pull_request:
+    branches:
+      - main        # Executa também quando alguém abre um Pull Request para a main
+
+# JOBS: o que o workflow vai fazer
+jobs:
+
+  # Job 1: Constrói a imagem Docker do backend
+  build-backend:
+    name: Build Backend
+    runs-on: ubuntu-latest  # Usa uma máquina virtual com Ubuntu (fornecida pelo GitHub gratuitamente)
+
+    steps:
+      # Passo 1: Baixa o código do repositório para a máquina virtual
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # Passo 2: Constrói a imagem Docker do backend
+      # O "-t" dá um nome (tag) para a imagem
+      - name: Build da imagem do Backend
+        run: docker build -t cardapio-backend:latest ./backend
+
+  # Job 2: Constrói a imagem Docker do frontend
+  build-frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Build da imagem do Frontend
+        run: docker build -t cardapio-frontend:latest ./frontend

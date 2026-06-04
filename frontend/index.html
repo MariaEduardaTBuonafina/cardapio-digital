@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cantina da Squad — Cardápio</title>
+
+  <!-- Importamos uma fonte bonita do Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =====================================================
+       VARIÁVEIS DE COR — mudar aqui muda o site inteiro
+    ===================================================== */
+    :root {
+      --cor-fundo: #1a1008;
+      --cor-fundo2: #2a1e10;
+      --cor-cartao: #2e2010;
+      --cor-dourado: #d4a847;
+      --cor-dourado-claro: #f0c96a;
+      --cor-texto: #f5e6c8;
+      --cor-texto-suave: #c4a87a;
+      --cor-separador: #3d2e18;
+    }
+
+    /* =====================================================
+       RESET E BASE — zeramos os estilos padrão do navegador
+    ===================================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box; /* Faz o padding não aumentar o tamanho dos elementos */
+    }
+
+    body {
+      background-color: var(--cor-fundo);
+      color: var(--cor-texto);
+      font-family: 'Lato', sans-serif;
+      min-height: 100vh; /* Ocupa pelo menos 100% da altura da tela */
+    }
+
+    /* =====================================================
+       CABEÇALHO
+    ===================================================== */
+    header {
+      background-color: var(--cor-fundo2);
+      border-bottom: 2px solid var(--cor-dourado);
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif; /* Fonte elegante só no título */
+      font-size: 3rem;
+      color: var(--cor-dourado);
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--cor-texto-suave);
+      font-size: 1rem;
+      font-weight: 300;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* =====================================================
+       ÁREA DE STATUS — mostra se a API está conectada
+    ===================================================== */
+    #status-api {
+      text-align: center;
+      padding: 12px;
+      font-size: 0.85rem;
+      background-color: #0a2a0a;
+      color: #6abf69;
+      display: none; /* Começa escondido */
+    }
+
+    #status-api.erro {
+      background-color: #2a0a0a;
+      color: #e57373;
+    }
+
+    /* =====================================================
+       CONTEÚDO PRINCIPAL
+    ===================================================== */
+    main {
+      max-width: 900px; /* Largura máxima para não ficar muito largo */
+      margin: 0 auto;   /* Centraliza horizontalmente */
+      padding: 40px 20px;
+    }
+
+    /* =====================================================
+       LOADING — animação enquanto carrega os dados
+    ===================================================== */
+    #loading {
+      text-align: center;
+      padding: 60px;
+      color: var(--cor-texto-suave);
+      font-size: 1.1rem;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--cor-separador);
+      border-top-color: var(--cor-dourado); /* Só a borda de cima tem cor */
+      border-radius: 50%;                   /* Deixa redondo */
+      margin: 0 auto 16px;
+      /* Animação de rotação — definida nos @keyframes lá embaixo */
+      animation: girar 0.8s linear infinite;
+    }
+
+    /* =====================================================
+       SEÇÕES DO CARDÁPIO (categorias)
+    ===================================================== */
+    .secao {
+      margin-bottom: 48px;
+    }
+
+    .secao-titulo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: var(--cor-dourado);
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--cor-separador);
+    }
+
+    /* =====================================================
+       GRADE DE CARTÕES (responsiva com CSS Grid)
+    ===================================================== */
+    .grade-itens {
+      display: grid;
+      /* repeat(auto-fill, ...) cria quantas colunas couberem na tela
+         minmax(260px, 1fr) = mínimo 260px, máximo 1 fração do espaço */
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px; /* Espaço entre os cartões */
+    }
+
+    /* =====================================================
+       CARTÃO DE CADA ITEM DO CARDÁPIO
+    ===================================================== */
+    .cartao {
+      background-color: var(--cor-cartao);
+      border: 1px solid var(--cor-separador);
+      border-radius: 8px;
+      padding: 24px;
+      /* Transição suave para o efeito hover */
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    /* Efeito ao passar o mouse */
+    .cartao:hover {
+      transform: translateY(-4px); /* Sobe 4px */
+      border-color: var(--cor-dourado);
+    }
+
+    .cartao-nome {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--cor-dourado-claro);
+      margin-bottom: 8px;
+    }
+
+    .cartao-descricao {
+      color: var(--cor-texto-suave);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .cartao-preco {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--cor-dourado);
+    }
+
+    /* =====================================================
+       RODAPÉ
+    ===================================================== */
+    footer {
+      border-top: 1px solid var(--cor-separador);
+      padding: 32px 20px;
+      text-align: center;
+      color: var(--cor-texto-suave);
+      font-size: 0.85rem;
+    }
+
+    footer .equipe {
+      margin-top: 8px;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+
+    /* =====================================================
+       @keyframes — define a animação do spinner
+    ===================================================== */
+    @keyframes girar {
+      to { transform: rotate(360deg); } /* Gira 360 graus continuamente */
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Cabeçalho da página -->
+  <header>
+    <h1>🍽️ Cantina da Squad</h1>
+    <p>Cardápio Digital — Projeto AV2 DevOps</p>
+  </header>
+
+  <!-- Barra de status da API (aparece só se houver erro) -->
+  <div id="status-api"></div>
+
+  <!-- Conteúdo principal -->
+  <main>
+    <!-- Loading: aparece enquanto os dados carregam -->
+    <div id="loading">
+      <div class="spinner"></div>
+      Carregando cardápio...
+    </div>
+
+    <!-- Aqui o JavaScript vai inserir o cardápio dinamicamente -->
+    <div id="cardapio"></div>
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <div>Projeto Final — Disciplina de DevOps</div>
+    <div class="equipe">
+      Squad: Maria Eduarda Trevizane · Maria Clara Trevizane · Luís Fernando Andrade · João Vitor Rodrigues
+    </div>
+  </footer>
+
+  <script>
+    // =====================================================
+    // JAVASCRIPT — busca os dados da API e monta a página
+    // =====================================================
+
+    // URL da API do backend
+    // Quando rodando localmente: http://localhost:5000/cardapio
+    // Quando rodando no Docker: o backend está na porta 5000
+    const API_URL = 'http://localhost:5000/cardapio';
+
+    // Função que formata o preço no padrão brasileiro (R$ 42,00)
+    function formatarPreco(valor) {
+      return valor.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      });
+    }
+
+    // Função principal: busca os dados e monta a página
+    async function carregarCardapio() {
+      try {
+        // "fetch" é a função nativa do navegador para fazer requisições HTTP
+        const resposta = await fetch(API_URL);
+
+        // Se a resposta não foi bem-sucedida, lança um erro
+        if (!resposta.ok) throw new Error('Erro na resposta da API');
+
+        // Converte a resposta de JSON para objeto JavaScript
+        const dados = await resposta.json();
+
+        // Esconde o loading
+        document.getElementById('loading').style.display = 'none';
+
+        // Pega o elemento onde vamos inserir o cardápio
+        const container = document.getElementById('cardapio');
+
+        // Para cada categoria do cardápio, criamos uma seção
+        dados.categorias.forEach(categoria => {
+
+          // Criamos o HTML de cada item desta categoria
+          const itensHTML = categoria.itens.map(item => `
+            <div class="cartao">
+              <div class="cartao-nome">${item.nome}</div>
+              <div class="cartao-descricao">${item.descricao}</div>
+              <div class="cartao-preco">${formatarPreco(item.preco)}</div>
+            </div>
+          `).join(''); // .join('') transforma o array de strings em uma única string
+
+          // Criamos o HTML da seção completa e inserimos na página
+          container.innerHTML += `
+            <section class="secao">
+              <h2 class="secao-titulo">${categoria.nome}</h2>
+              <div class="grade-itens">
+                ${itensHTML}
+              </div>
+            </section>
+          `;
+        });
+
+      } catch (erro) {
+        // Se algo deu errado, mostramos uma mensagem de erro
+        document.getElementById('loading').style.display = 'none';
+        const statusDiv = document.getElementById('status-api');
+        statusDiv.style.display = 'block';
+        statusDiv.classList.add('erro');
+        statusDiv.textContent = '⚠️ Não foi possível conectar à API. Certifique-se de que o backend está rodando.';
+
+        // Mostramos o cardápio com dados de exemplo para não ficar em branco
+        mostrarDadosExemplo();
+      }
+    }
+
+    // Função de fallback: mostra dados de exemplo se a API estiver fora
+    function mostrarDadosExemplo() {
+      const container = document.getElementById('cardapio');
+      container.innerHTML = `
+        <section class="secao">
+          <h2 class="secao-titulo">⚠️ Modo Offline</h2>
+          <p style="color: var(--cor-texto-suave); margin-bottom: 20px;">
+            Exibindo dados de exemplo. Para ver o cardápio completo, inicie o backend.
+          </p>
+          <div class="grade-itens">
+            <div class="cartao">
+              <div class="cartao-nome">Macarrão ao Sugo</div>
+              <div class="cartao-descricao">Massa artesanal com molho de tomate fresco</div>
+              <div class="cartao-preco">R$ 42,00</div>
+            </div>
+            <div class="cartao">
+              <div class="cartao-nome">Frango Grelhado</div>
+              <div class="cartao-descricao">Com arroz, feijão e farofa</div>
+              <div class="cartao-preco">R$ 48,90</div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    // Chama a função ao carregar a página
+    carregarCardapio();
+  </script>
+
+</body>
+</html>
