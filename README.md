@@ -60,8 +60,10 @@ docker compose down
 ---
 
 ## 📁 Estrutura do Projeto
+
+```text
 cardapio-digital/
-|── backend/
+├── backend/
 │   ├── app.py
 │   ├── requirements.txt
 │   └── Dockerfile
@@ -75,3 +77,4 @@ cardapio-digital/
 ├── .env.example
 ├── docker-compose.yml
 └── README.md
+```
