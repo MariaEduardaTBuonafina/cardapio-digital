@@ -3,15 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cantina da Squad — Cardápio</title>
+  <title>Cantina — Cardápio</title>
 
-  <!-- Importamos uma fonte bonita do Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* =====================================================
-       VARIÁVEIS DE COR — mudar aqui muda o site inteiro
-    ===================================================== */
+    
     :root {
       --cor-fundo: #1a1008;
       --cor-fundo2: #2a1e10;
@@ -23,20 +20,18 @@
       --cor-separador: #3d2e18;
     }
 
-    /* =====================================================
-       RESET E BASE — zeramos os estilos padrão do navegador
-    ===================================================== */
+    
     * {
       margin: 0;
       padding: 0;
-      box-sizing: border-box; /* Faz o padding não aumentar o tamanho dos elementos */
+      box-sizing: border-box; 
     }
 
     body {
       background-color: var(--cor-fundo);
       color: var(--cor-texto);
       font-family: 'Lato', sans-serif;
-      min-height: 100vh; /* Ocupa pelo menos 100% da altura da tela */
+      min-height: 100vh; 
     }
 
     /* =====================================================
@@ -50,7 +45,7 @@
     }
 
     header h1 {
-      font-family: 'Playfair Display', serif; /* Fonte elegante só no título */
+      font-family: 'Playfair Display', serif; 
       font-size: 3rem;
       color: var(--cor-dourado);
       letter-spacing: 3px;
@@ -66,7 +61,7 @@
     }
 
     /* =====================================================
-       ÁREA DE STATUS — mostra se a API está conectada
+       ÁREA DE STATUS 
     ===================================================== */
     #status-api {
       text-align: center;
@@ -86,13 +81,13 @@
        CONTEÚDO PRINCIPAL
     ===================================================== */
     main {
-      max-width: 900px; /* Largura máxima para não ficar muito largo */
-      margin: 0 auto;   /* Centraliza horizontalmente */
+      max-width: 900px; 
+      margin: 0 auto;   
       padding: 40px 20px;
     }
 
     /* =====================================================
-       LOADING — animação enquanto carrega os dados
+       LOADING 
     ===================================================== */
     #loading {
       text-align: center;
@@ -105,8 +100,8 @@
       width: 40px;
       height: 40px;
       border: 3px solid var(--cor-separador);
-      border-top-color: var(--cor-dourado); /* Só a borda de cima tem cor */
-      border-radius: 50%;                   /* Deixa redondo */
+      border-top-color: var(--cor-dourado); 
+      border-radius: 50%;                   
       margin: 0 auto 16px;
       /* Animação de rotação — definida nos @keyframes lá embaixo */
       animation: girar 0.8s linear infinite;
@@ -129,14 +124,12 @@
     }
 
     /* =====================================================
-       GRADE DE CARTÕES (responsiva com CSS Grid)
+       GRADE DE CARTÕES 
     ===================================================== */
     .grade-itens {
       display: grid;
-      /* repeat(auto-fill, ...) cria quantas colunas couberem na tela
-         minmax(260px, 1fr) = mínimo 260px, máximo 1 fração do espaço */
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 20px; /* Espaço entre os cartões */
+      gap: 20px; 
     }
 
     /* =====================================================
@@ -147,13 +140,11 @@
       border: 1px solid var(--cor-separador);
       border-radius: 8px;
       padding: 24px;
-      /* Transição suave para o efeito hover */
       transition: transform 0.2s ease, border-color 0.2s ease;
     }
 
-    /* Efeito ao passar o mouse */
     .cartao:hover {
-      transform: translateY(-4px); /* Sobe 4px */
+      transform: translateY(-4px); 
       border-color: var(--cor-dourado);
     }
 
@@ -198,7 +189,7 @@
        @keyframes — define a animação do spinner
     ===================================================== */
     @keyframes girar {
-      to { transform: rotate(360deg); } /* Gira 360 graus continuamente */
+      to { transform: rotate(360deg); } 
     }
   </style>
 </head>
@@ -216,27 +207,26 @@
 
   <!-- Conteúdo principal -->
   <main>
-    <!-- Loading: aparece enquanto os dados carregam -->
+    <!-- Loading -->
     <div id="loading">
       <div class="spinner"></div>
       Carregando cardápio...
     </div>
 
-    <!-- Aqui o JavaScript vai inserir o cardápio dinamicamente -->
     <div id="cardapio"></div>
   </main>
 
   <!-- Rodapé -->
   <footer>
-    <div>Projeto Final — Disciplina de DevOps</div>
+    <div>Projeto Cardápio Digital — Cantina</div>
     <div class="equipe">
-      Squad: Maria Eduarda Trevizane · Maria Clara Trevizane · Luís Fernando Andrade · João Vitor Rodrigues
+       Maria Eduarda Trevizane
     </div>
   </footer>
 
   <script>
     // =====================================================
-    // JAVASCRIPT — busca os dados da API e monta a página
+    // JAVASCRIPT 
     // =====================================================
 
     // URL da API do backend
@@ -255,34 +245,26 @@
     // Função principal: busca os dados e monta a página
     async function carregarCardapio() {
       try {
-        // "fetch" é a função nativa do navegador para fazer requisições HTTP
         const resposta = await fetch(API_URL);
 
-        // Se a resposta não foi bem-sucedida, lança um erro
         if (!resposta.ok) throw new Error('Erro na resposta da API');
 
-        // Converte a resposta de JSON para objeto JavaScript
         const dados = await resposta.json();
 
-        // Esconde o loading
         document.getElementById('loading').style.display = 'none';
 
-        // Pega o elemento onde vamos inserir o cardápio
         const container = document.getElementById('cardapio');
 
-        // Para cada categoria do cardápio, criamos uma seção
         dados.categorias.forEach(categoria => {
 
-          // Criamos o HTML de cada item desta categoria
           const itensHTML = categoria.itens.map(item => `
             <div class="cartao">
               <div class="cartao-nome">${item.nome}</div>
               <div class="cartao-descricao">${item.descricao}</div>
               <div class="cartao-preco">${formatarPreco(item.preco)}</div>
             </div>
-          `).join(''); // .join('') transforma o array de strings em uma única string
+          `).join(''); 
 
-          // Criamos o HTML da seção completa e inserimos na página
           container.innerHTML += `
             <section class="secao">
               <h2 class="secao-titulo">${categoria.nome}</h2>
@@ -294,19 +276,16 @@
         });
 
       } catch (erro) {
-        // Se algo deu errado, mostramos uma mensagem de erro
         document.getElementById('loading').style.display = 'none';
         const statusDiv = document.getElementById('status-api');
         statusDiv.style.display = 'block';
         statusDiv.classList.add('erro');
         statusDiv.textContent = '⚠️ Não foi possível conectar à API. Certifique-se de que o backend está rodando.';
 
-        // Mostramos o cardápio com dados de exemplo para não ficar em branco
         mostrarDadosExemplo();
       }
     }
 
-    // Função de fallback: mostra dados de exemplo se a API estiver fora
     function mostrarDadosExemplo() {
       const container = document.getElementById('cardapio');
       container.innerHTML = `
@@ -331,7 +310,6 @@
       `;
     }
 
-    // Chama a função ao carregar a página
     carregarCardapio();
   </script>
 

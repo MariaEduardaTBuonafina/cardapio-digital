@@ -1,25 +1,24 @@
 # Versão da sintaxe do docker-compose
 version: '3.8'
 
-# "services" define os containers que vamos criar
 services:
 
-  # Container do Backend (servidor Python/Flask)
+  # Container do Backend 
   backend:
-    build: ./backend       # Onde está o Dockerfile do backend
+    build: ./backend       
     container_name: cardapio-backend
     ports:
-      - "5000:5000"        # Porta do computador : Porta do container
+      - "5000:5000"        
     environment:
       - PORT=5000          # Variável de ambiente (substitui o .env em produção)
-    restart: unless-stopped # Reinicia o container se ele cair (exceto se você parar manualmente)
+    restart: unless-stopped 
 
-  # Container do Frontend (servidor Nginx com nosso HTML)
+  # Container do Frontend 
   frontend:
-    build: ./frontend      # Onde está o Dockerfile do frontend
+    build: ./frontend      
     container_name: cardapio-frontend
     ports:
       - "8080:80"          # Porta 8080 do computador → Porta 80 do container
     depends_on:
-      - backend            # O frontend só inicia depois que o backend estiver pronto
+      - backend            
     restart: unless-stopped
